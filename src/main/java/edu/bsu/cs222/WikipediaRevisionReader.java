@@ -16,6 +16,13 @@ public class WikipediaRevisionReader {
         WikipediaRevisionReader revisionReader = new WikipediaRevisionReader();
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
+
+        //err handling if nothing is entered.
+        if (line.isBlank()){
+            System.err.println("Nothing was entered.");
+            System.exit(1);
+        }
+
         try {
             String timestamp = revisionReader.getLatestRevisionOf(line);
             System.out.println(timestamp);
@@ -27,27 +34,19 @@ public class WikipediaRevisionReader {
     }
 
     private String getLatestRevisionOf(String articleTitle) throws IOException {
-
         String urlString = String.format("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=%s&rvprop=timestamp|user&rvlimit=30&redirects", articleTitle);
         String encodedUrlString = URLEncoder.encode(urlString, Charset.defaultCharset());
         try {
-
             URL url = new URL(encodedUrlString);
             URLConnection connection = url.openConnection();
             connection.setRequestProperty("User-Agent",
                     "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
             InputStream inputStream = connection.getInputStream();
-            WikipediaRevisionParser parser = new WikipediaRevisionParser();
-            String timestamp = parser.parse(inputStream);
-            return timestamp;
+            return WikipediaRevisionParser.parse(inputStream);
         }
         catch (MalformedURLException malformedURLException){
-
             throw new RuntimeException(malformedURLException);
-
         }
-
-
     }
 
 }
