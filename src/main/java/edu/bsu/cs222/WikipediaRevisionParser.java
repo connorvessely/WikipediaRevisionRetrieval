@@ -8,7 +8,7 @@ import java.io.InputStream;
 
 public class WikipediaRevisionParser {
     public static WikipediaRevision[] parse(InputStream testDataStream) throws IOException {
-        JSONArray wiki = JsonPath.read(testDataStream, "$..*");
+        JSONArray wiki =  JsonPath.read(testDataStream, "$..*");
         JSONArray userName = JsonPath.read(wiki,"$..user");
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
 
