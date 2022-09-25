@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="edu.bsu.cs222.WikipediaRevisionParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-09-25T20:40:00" hostname="LAPTOP-1UR72CHQ" time="0.058">
+<testsuite name="edu.bsu.cs222.WikipediaRevisionParserTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-09-25T21:29:27" hostname="WALLACE" time="0.045">
   <properties/>
-  <testcase name="testParse()" classname="edu.bsu.cs222.WikipediaRevisionParserTest" time="0.058"/>
+  <testcase name="testParse()" classname="edu.bsu.cs222.WikipediaRevisionParserTest" time="0.045"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
 SLF4J: Defaulting to no-operation (NOP) logger implementation
