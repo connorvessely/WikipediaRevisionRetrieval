@@ -12,7 +12,7 @@ public class WikipediaRevisionParserTest {
     public void testParse() throws IOException {
         WikipediaRevisionParser parser = new WikipediaRevisionParser();
         InputStream testDataStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LearningTestJamieFoxx.json");
-        String timestamp = parser.parse(testDataStream);
+        WikipediaRevision[] timestamp = parser.parse(testDataStream);
         Assertions.assertEquals("2022-08-17T11:15:19Z", timestamp);
     }
 
@@ -20,7 +20,7 @@ public class WikipediaRevisionParserTest {
     public void testTitleParse() throws IOException{
         WikipediaRevisionParser parser = new WikipediaRevisionParser();
         InputStream testDataStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("LearningTestJamieFoxx.json");
-        String title = parser.parse(testDataStream);
+        WikipediaRevision[] title = parser.parse(testDataStream);
         Assertions.assertEquals("Jamie Foxx", title);
     }
 }
