@@ -7,11 +7,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WikipediaRevisionParser {
-    public static String parse(InputStream testDataStream) throws IOException {
+    public static WikipediaRevision[] parse(InputStream testDataStream) throws IOException {
         JSONArray wiki = (JSONArray) JsonPath.read(testDataStream, "$..*");
-        JSONArray titleResult = JsonPath.read(wiki,"$..redirects..to");
         JSONArray userName = JsonPath.read(wiki,"$..user");
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
-        return timestamp.get(0).toString();
+
+        if (userName.size()>0){
+            WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
+            for (int i = 0; i < userName.size(); i++){
+                WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
+                revisionList[i] = wikiRevision;
+            } return revisionList;
+        }
+        return null;
     }
 }
