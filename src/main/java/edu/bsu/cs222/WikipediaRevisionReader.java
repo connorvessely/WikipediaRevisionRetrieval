@@ -16,9 +16,8 @@ public class WikipediaRevisionReader {
 
         try {
             WikipediaRevision[] revisionList = getLatestRevisionOf(line);
-            String formattedRevisionList = WikipediaRevisionFormatter.Formatter(revisionList);
-            //String timestamp = revisionReader.getLatestRevisionOf(line);
-            //System.out.println(timestamp);
+            System.out.println(WikipediaRevisionFormatter.formatter(revisionList));
+
         }
         catch (IOException ioException){
             System.err.println("Network Connection Error: " + ioException.getMessage());
