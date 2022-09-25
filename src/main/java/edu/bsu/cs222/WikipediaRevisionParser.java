@@ -18,7 +18,7 @@ public class WikipediaRevisionParser {
                 WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
                 revisionList[i] = wikiRevision;
             } return revisionList;
-        }
-        return null;
+
+        } return null;
     }
 }

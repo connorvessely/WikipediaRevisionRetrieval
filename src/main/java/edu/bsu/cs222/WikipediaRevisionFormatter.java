@@ -2,7 +2,7 @@ package edu.bsu.cs222;
 
 public class WikipediaRevisionFormatter {
 
-    public static String Formatter(WikipediaRevision[] revisionList){
+    public static String formatter(WikipediaRevision[] revisionList){
         return null;
     }
 

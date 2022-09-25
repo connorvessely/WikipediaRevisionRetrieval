@@ -16,7 +16,7 @@ public class WikipediaRevisionReader {
 
         try {
             WikipediaRevision[] revisionList = getLatestRevisionOf(line);
-            String formattedRevisionList = WikipediaRevisionFormatter.Formatter(revisionList);
+            String formattedRevisionList = WikipediaRevisionFormatter.formatter(revisionList);
             //String timestamp = revisionReader.getLatestRevisionOf(line);
             //System.out.println(timestamp);
         }
