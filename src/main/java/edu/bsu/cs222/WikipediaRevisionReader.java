@@ -21,6 +21,7 @@ public class WikipediaRevisionReader {
         }
         catch (IOException ioException){
             System.err.println("Network Connection Error: " + ioException.getMessage());
+            System.exit(3);
         }
     }
 

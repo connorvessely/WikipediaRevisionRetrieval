@@ -8,11 +8,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WikipediaRevisionParser {
-    public static WikipediaRevision[] parse(InputStream testDataStream) throws IOException {
-        JSONArray wiki =  JsonPath.read(testDataStream, "$..*");
+    public static WikipediaRevision[] parse(InputStream testDataStream){
+        JSONArray wiki = null;
+        try {
+            wiki = JsonPath.read(testDataStream, "$..*");
+        }
+        catch (IOException e) {
+            System.err.println(e);
+            System.exit(2);
+
+        }
         JSONArray userName = JsonPath.read(wiki,"$..user");
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
-
         if (userName.size()>0){
             WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
             for (int i = 0; i < userName.size(); i++){
@@ -20,15 +27,17 @@ public class WikipediaRevisionParser {
                 revisionList[i] = wikiRevision;
             } return revisionList;
         }
-        return null;
+        else{
+            System.err.println();
+            System.exit(1);
+            return null;
+        }
     }
     public String parseRedirect(InputStream testDataStream) throws IOException {
         JSONArray wiki =  JsonPath.read(testDataStream, "$..*");
-        JSONArray redirectDict = JsonPath.read(wiki, "$..redirects");
-        JSONArray userInput = JsonPath.read(redirectDict, "$..from");
-        JSONArray articleTitle = JsonPath.read(redirectDict, "$..to");
-        if (redirectDict.size()>0) {
-            return "Redirected from " + userInput.get(0) + " to " + articleTitle.get(0);
+        JSONArray articleTitle = JsonPath.read(wiki, "$..redirects..to");
+        if (articleTitle.size()>0) {
+            return "Redirected to " + articleTitle.get(0);
         }
         else {
             return "No redirects";
