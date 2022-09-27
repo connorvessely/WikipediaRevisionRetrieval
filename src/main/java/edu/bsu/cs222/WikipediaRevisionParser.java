@@ -2,6 +2,7 @@ package edu.bsu.cs222;
 
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,5 +21,17 @@ public class WikipediaRevisionParser {
             } return revisionList;
         }
         return null;
+    }
+    public String parseRedirect(InputStream testDataStream) throws IOException {
+        JSONArray wiki =  JsonPath.read(testDataStream, "$..*");
+        JSONArray redirectDict = JsonPath.read(wiki,"$..redirects");
+        JSONArray userInput = JsonPath.read(redirectDict, "$..from");
+        JSONArray articleTitle = JsonPath.read(redirectDict, "$..to");
+        if (redirectDict.size()>0) {
+            return "Redirected from " + userInput + " to " + articleTitle;
+        }
+        else {
+            return "No redirects";
+        }
     }
 }
