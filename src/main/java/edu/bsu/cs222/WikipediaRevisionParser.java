@@ -24,11 +24,11 @@ public class WikipediaRevisionParser {
     }
     public String parseRedirect(InputStream testDataStream) throws IOException {
         JSONArray wiki =  JsonPath.read(testDataStream, "$..*");
-        JSONArray redirectDict = JsonPath.read(wiki,"$..redirects");
+        JSONArray redirectDict = JsonPath.read(wiki, "$..redirects");
         JSONArray userInput = JsonPath.read(redirectDict, "$..from");
         JSONArray articleTitle = JsonPath.read(redirectDict, "$..to");
         if (redirectDict.size()>0) {
-            return "Redirected from " + userInput + " to " + articleTitle;
+            return "Redirected from " + userInput.get(0) + " to " + articleTitle.get(0);
         }
         else {
             return "No redirects";
