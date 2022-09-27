@@ -2,8 +2,6 @@ package edu.bsu.cs222;
 
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -14,7 +12,7 @@ public class WikipediaRevisionParser {
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
         if (userName.size()>0){
             WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
-            for (int i = 0; i < userName.size(); i++){
+            for (int i = 0; i < 30; i++){
                 WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
                 revisionList[i] = wikiRevision;
             } return revisionList;
@@ -24,8 +22,8 @@ public class WikipediaRevisionParser {
             System.exit(2);
             return null;
         }
-
     }
+
     public String parseRedirect(InputStream testDataStream) throws IOException {
         JSONArray wiki =  JsonPath.read(testDataStream, "$..*");
         JSONArray articleTitle = JsonPath.read(wiki, "$..redirects..to");
@@ -33,7 +31,8 @@ public class WikipediaRevisionParser {
             return "Redirected to " + articleTitle.get(0);
         }
         else {
-            return "No redirects";
+            articleTitle = JsonPath.read(wiki, "$..title");
+            return "No redirects\n" + articleTitle.get(0);
         }
     }
 }

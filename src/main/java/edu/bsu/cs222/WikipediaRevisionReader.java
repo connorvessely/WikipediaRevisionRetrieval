@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.Scanner;
 import java.net.URL;
-import java.net.MalformedURLException;
 
 public class WikipediaRevisionReader {
 
@@ -20,7 +19,6 @@ public class WikipediaRevisionReader {
             WikipediaRevision[] revisionList = getLatestRevisionOf(line);
             String formattedRevisionList = WikipediaRevisionFormatter.formatter(revisionList);
             System.out.println(getRedirects(line));
-            System.out.println("Last 30 Revisions for " + '"' + line + '"' + ":");
             System.out.println(formattedRevisionList);
         }
     }

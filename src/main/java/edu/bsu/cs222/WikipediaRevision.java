@@ -10,7 +10,9 @@ public class WikipediaRevision {
         this.timestamp = timestamp;
     }
 
-    public String getAuthor(){ return author; }
+    public String getAuthor(){
+        return author;
+    }
 
     public String getTimestamp(){
         return timestamp;
