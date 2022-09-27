@@ -8,16 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WikipediaRevisionParser {
-    public static WikipediaRevision[] parse(InputStream testDataStream){
-        JSONArray wiki = null;
-        try {
-            wiki = JsonPath.read(testDataStream, "$..*");
-        }
-        catch (IOException e) {
-            System.err.println(e);
-            System.exit(2);
-
-        }
+    public static WikipediaRevision[] parse(InputStream testDataStream) throws IOException {
+        JSONArray wiki = JsonPath.read(testDataStream, "$..*");
         JSONArray userName = JsonPath.read(wiki,"$..user");
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
         if (userName.size()>0){
@@ -27,11 +19,12 @@ public class WikipediaRevisionParser {
                 revisionList[i] = wikiRevision;
             } return revisionList;
         }
-        else{
-            System.err.println();
-            System.exit(1);
+        else {
+            System.err.println("No wikipedia page for your input.");
+            System.exit(2);
             return null;
         }
+
     }
     public String parseRedirect(InputStream testDataStream) throws IOException {
         JSONArray wiki =  JsonPath.read(testDataStream, "$..*");

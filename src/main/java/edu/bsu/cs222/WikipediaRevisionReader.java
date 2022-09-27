@@ -9,25 +9,24 @@ import java.net.MalformedURLException;
 
 public class WikipediaRevisionReader {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
-        try {
+        if (line.isBlank()) {
+            System.err.println("No value entered.");
+            System.exit(2);
+        }
+        else {
             WikipediaRevision[] revisionList = getLatestRevisionOf(line);
             String formattedRevisionList = WikipediaRevisionFormatter.formatter(revisionList);
             System.out.println(getRedirects(line));
             System.out.println("Last 30 Revisions for " + '"' + line + '"' + ":");
             System.out.println(formattedRevisionList);
         }
-        catch (IOException ioException){
-            System.err.println("Network Connection Error: " + ioException.getMessage());
-            System.exit(3);
-        }
     }
 
     private static WikipediaRevision[] getLatestRevisionOf(String articleTitle) throws IOException {
-        WikipediaRevisionParser wikipediaRevisionParser = new WikipediaRevisionParser();
-        return wikipediaRevisionParser.parse(encodeUrl(articleTitle));
+        return WikipediaRevisionParser.parse(encodeUrl(articleTitle));
     }
 
     private static String getRedirects(String articleTitle) throws IOException {
@@ -40,6 +39,12 @@ public class WikipediaRevisionReader {
         URL url = new URL(urlString.replaceAll(" ","%20"));
         URLConnection connection = url.openConnection();
         connection.setRequestProperty("User-Agent", "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
-        return connection.getInputStream();
+        try {
+            return connection.getInputStream();
+        } catch (IOException e) {
+            System.err.println("Network Connection Error");
+            System.exit(3);
+            return null;
+        }
     }
 }
