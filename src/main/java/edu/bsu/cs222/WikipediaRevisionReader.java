@@ -8,7 +8,7 @@ import java.net.URL;
 
 public class WikipediaRevisionReader {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
         if (line.isBlank()) {
@@ -23,23 +23,24 @@ public class WikipediaRevisionReader {
         }
     }
 
-    private static WikipediaRevision[] getLatestRevisionOf(String articleTitle) throws IOException {
+    private static WikipediaRevision[] getLatestRevisionOf(String articleTitle) {
         return WikipediaRevisionParser.parse(encodeUrl(articleTitle));
     }
 
-    private static String getRedirects(String articleTitle) throws IOException {
-        WikipediaRevisionParser wikipediaRevisionParser= new WikipediaRevisionParser();
+    private static String getRedirects(String articleTitle) {
+        WikipediaRevisionParser wikipediaRevisionParser = new WikipediaRevisionParser();
         return wikipediaRevisionParser.parseRedirect(encodeUrl(articleTitle));
     }
 
-    private static InputStream encodeUrl(String articleTitle) throws IOException{
+    private static InputStream encodeUrl(String articleTitle) {
         String urlString = String.format("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=%s&rvprop=timestamp|user&rvlimit=30&redirects", articleTitle);
-        URL url = new URL(urlString.replaceAll(" ","%20"));
-        URLConnection connection = url.openConnection();
-        connection.setRequestProperty("User-Agent", "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
         try {
+            URL url = new URL(urlString.replaceAll(" ", "%20"));
+            URLConnection connection = url.openConnection();
+            connection.setRequestProperty("User-Agent", "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
             return connection.getInputStream();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println("Network Connection Error");
             System.exit(3);
             return null;

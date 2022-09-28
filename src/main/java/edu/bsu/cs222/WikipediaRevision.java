@@ -17,5 +17,4 @@ public class WikipediaRevision {
     public String getTimestamp(){
         return timestamp;
     }
-
 }
