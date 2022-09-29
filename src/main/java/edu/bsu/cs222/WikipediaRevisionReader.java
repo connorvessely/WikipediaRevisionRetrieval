@@ -1,5 +1,7 @@
 package edu.bsu.cs222;
 
+import javafx.application.Application;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
