@@ -3,13 +3,14 @@ package edu.bsu.cs222;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 public class WikipediaRevisionParserTest {
     @Test
-    public void testParseAuthor() {
+    public void testParseAuthor() throws IOException {
         InputStream testDataStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("test.json");
-        WikipediaRevision[] revisionList = WikipediaRevisionParser.parseRevisions(testDataStream);
+        WikipediaRevision[] revisionList = WikipediaRevisionParser.parseRevisions(WikipediaRevisionParser.parseJSON(testDataStream));
         Assertions.assertEquals(revisionList[0].getAuthor(), "Rlink2");
     }
 

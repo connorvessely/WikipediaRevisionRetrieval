@@ -15,10 +15,6 @@ public class WikipediaRevisionParser {
         JSONArray userName = JsonPath.read(wiki, "$..user");
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
         WikipediaRevision[] revisionList = new WikipediaRevision[30];
-        if (userName.isEmpty()) {
-            System.err.println("No Wikipedia page for that title was found.");
-            System.exit(2);
-        }
         for (int i = 0; i < revisionList.length; i++) {
             WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
             revisionList[i] = wikiRevision;
