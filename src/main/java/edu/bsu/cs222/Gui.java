@@ -64,4 +64,7 @@ public class Gui extends Application {
     private void handleButtonClick() {
         String userEntry = titleToCheck.getText();
     }
+
+
+
 }

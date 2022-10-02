@@ -14,8 +14,8 @@ public class WikipediaRevisionParser {
     public static WikipediaRevision[] parseRevisions(JSONArray wiki){
         JSONArray userName = JsonPath.read(wiki, "$..user");
         JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
-        WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
-        for (int i = 0; i < 30; i++) {
+        WikipediaRevision[] revisionList = new WikipediaRevision[30];
+        for (int i = 0; i < revisionList.length; i++) {
             WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
             revisionList[i] = wikiRevision;
         }
