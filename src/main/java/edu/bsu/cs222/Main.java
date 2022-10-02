@@ -14,7 +14,7 @@ public class Main {
         String input = scanner.nextLine();
         if (input.isBlank()) {
             System.err.println("No value entered.");
-            System.exit(2);
+            System.exit(1);
         }
 
         URL wikiUrl = WikipediaRevisionReader.encodeURL(input);
