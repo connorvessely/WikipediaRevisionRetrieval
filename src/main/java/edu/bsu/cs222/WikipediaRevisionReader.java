@@ -1,44 +1,30 @@
 package edu.bsu.cs222;
 
-import javafx.application.Application;
+import net.minidev.json.JSONArray;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URLConnection;
-import java.util.Scanner;
 import java.net.URL;
 
 public class WikipediaRevisionReader {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String line = scanner.nextLine();
-        if (line.isBlank()) {
-            System.err.println("No value entered.");
-            System.exit(2);
-        }
-        else {
-            WikipediaRevision[] revisionList = getLatestRevisionOf(line);
-            String formattedRevisionList = WikipediaRevisionFormatter.formatter(revisionList);
-            System.out.println(getRedirects(line));
-            System.out.println(formattedRevisionList);
-        }
-    }
-
-    private static WikipediaRevision[] getLatestRevisionOf(String articleTitle) {
-        return WikipediaRevisionParser.parse(encodeUrl(articleTitle));
-    }
-
-    private static String getRedirects(String articleTitle) {
-        WikipediaRevisionParser wikipediaRevisionParser = new WikipediaRevisionParser();
-        return wikipediaRevisionParser.parseRedirect(encodeUrl(articleTitle));
-    }
-
-    private static InputStream encodeUrl(String articleTitle) {
-        String urlString = String.format("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=%s&rvprop=timestamp|user&rvlimit=30&redirects", articleTitle);
+    public static String getRevisionInfo (String searchValue){
+        JSONArray wiki = null;
         try {
-            URL url = new URL(urlString.replaceAll(" ", "%20"));
-            URLConnection connection = url.openConnection();
+            wiki = WikipediaRevisionParser.parseJSON(getWikiStream(encodeURL(searchValue)));
+            }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return WikipediaRevisionFormatter.formatter(wiki);
+    }
+
+    private static InputStream getWikiStream(URL encodedUrl) {
+        URLConnection connection = null;
+        try {
+            connection = encodedUrl.openConnection();
             connection.setRequestProperty("User-Agent", "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
             return connection.getInputStream();
         }
@@ -47,5 +33,16 @@ public class WikipediaRevisionReader {
             System.exit(3);
             return null;
         }
+    }
+
+    private static URL encodeURL (String articleTitle){
+        String urlString = String.format("https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=%s&rvprop=timestamp|user&rvlimit=30&redirects", articleTitle);
+        URL url = null;
+        try {
+            url = new URL(urlString.replaceAll(" ", "%20"));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 }

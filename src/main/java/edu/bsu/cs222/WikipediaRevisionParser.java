@@ -6,50 +6,23 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WikipediaRevisionParser {
-    public static WikipediaRevision[] parse(InputStream testDataStream) {
-        WikipediaRevision[] result;
-        JSONArray wiki = null;
-        try {
-            wiki = JsonPath.read(testDataStream, "$..*");
-        } catch (IOException e) {
-            System.err.println("JSONArray wiki empty");
-            e.printStackTrace();
-        }
-        JSONArray userName = JsonPath.read(wiki, "$..user");
-        JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
-        if (userName.size() > 30) {
-            WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
-            for (int i = 0; i < 30; i++) {
-                WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
-                revisionList[i] = wikiRevision;
-            }
-            result = revisionList;
-        }
-        else if (userName.size() < 30 && userName.size() > 0){
-            WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
-            for (int i = 0; i < userName.size(); i++) {
-                WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
-                revisionList[i] = wikiRevision;
-            }
-            result = revisionList;
-        }
-        else {
-            System.err.println("No wikipedia page for your input.");
-            System.exit(2);
-            result = null;
-        }
-        return result;
+
+    public static JSONArray parseJSON (InputStream inputStream) throws IOException {
+        return JsonPath.read(inputStream, "$..*");
     }
 
-    public static String parseRedirect(InputStream testDataStream) {
-        JSONArray wiki = null;
-        try {
-            wiki = JsonPath.read(testDataStream, "$..*");
+    public static WikipediaRevision[] parseRevisions(JSONArray wiki){
+        JSONArray userName = JsonPath.read(wiki, "$..user");
+        JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
+        WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
+        for (int i = 0; i < 30; i++) {
+            WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
+            revisionList[i] = wikiRevision;
         }
-        catch (IOException e) {
-            System.err.println("Empty JSON");
-            e.printStackTrace();
-        }
+        return revisionList;
+    }
+
+    public static String parseRedirect(JSONArray wiki) {
         JSONArray articleTitle = JsonPath.read(wiki, "$..redirects..to");
         if (articleTitle.size()>0) {
             return "Redirected to " + articleTitle.get(0);
