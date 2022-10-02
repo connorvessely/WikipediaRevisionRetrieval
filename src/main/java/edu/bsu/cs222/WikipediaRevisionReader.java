@@ -14,7 +14,7 @@ public class WikipediaRevisionReader {
         JSONArray wiki = null;
         try {
             wiki = WikipediaRevisionParser.parseJSON(getWikiStream(encodeURL(searchValue)));
-            }
+        }
         catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +40,8 @@ public class WikipediaRevisionReader {
         URL url = null;
         try {
             url = new URL(urlString.replaceAll(" ", "%20"));
-        } catch (MalformedURLException e) {
+        }
+        catch (MalformedURLException e) {
             e.printStackTrace();
         }
         return url;
