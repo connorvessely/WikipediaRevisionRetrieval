@@ -1,8 +1,6 @@
 package edu.bsu.cs222;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,13 +11,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.minidev.json.JSONArray;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Scanner;
 
 public class Gui extends Application {
 
@@ -52,33 +49,53 @@ public class Gui extends Application {
         revisions = new Text();
         grid.add(revisions,1,7);
 
-        checkButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                try {
-                    handleButtonClick();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        checkButton.setOnAction(actionEvent -> {
+            try {
+                handleButtonClick();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
         });
         Scene scene = new Scene(grid, 440, 240);
-        stage.setTitle("Hello!");
+        stage.setMaximized(true);
+        stage.setTitle("Wikipedia Revision Checker");
         stage.setScene(scene);
         stage.show();
     }
 
     private void handleButtonClick() throws IOException {
         String userEntry = titleToCheck.getText();
-        if (userEntry.isBlank()) {
+        URL wikiUrl = WikipediaRevisionReader.encodeURL(userEntry);
+        InputStream wikiStream = null;
+        try {
+            wikiStream = WikipediaRevisionReader.getWikiStream(wikiUrl);
+        }
+        catch (IOException e) {
+            revisions.setText("Try again when connected to the internet.");
+            displayNetworkErrorDialog();
+        }
+        JSONArray wiki = WikipediaRevisionParser.parseJSON(wikiStream);
+        if (userEntry.isEmpty()) {
             revisions.setText("No Value was entered.");
         }
-
-        URL wikiUrl = WikipediaRevisionReader.encodeURL(userEntry);
-        InputStream wikiStream = WikipediaRevisionReader.getWikiStream(wikiUrl);
-        JSONArray wiki = WikipediaRevisionParser.parseJSON(wikiStream);
-
-        revisions.setText(WikipediaRevisionFormatter.formatter(wiki));
+        else if (WikipediaRevisionParser.parseRevisions(wiki).length==0) {
+            revisions.setText("No Wikipedia page for that title was found.");
+        }
+        else {
+            revisions.setText(WikipediaRevisionFormatter.formatter(wiki));
+        }
     }
 
+    private void displayNetworkErrorDialog(){
+        Stage stage = new Stage();
+        GridPane grid = new GridPane();
+        Scene scene = new Scene(grid);
+        Text error = new Text("Network Connection Error");
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(error, 0, 0, 2, 1);
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
 }

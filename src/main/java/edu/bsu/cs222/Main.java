@@ -34,11 +34,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        if (WikipediaRevisionParser.parseRevisions(wiki).length==0) {
-            System.err.println("No Wikipedia page for that title was found.");
-            System.exit(2);
-        }
-
         System.out.println(WikipediaRevisionFormatter.formatter(wiki));
     }
 }
