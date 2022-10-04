@@ -14,6 +14,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import net.minidev.json.JSONArray;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Scanner;
 
 public class Gui extends Application {
 
@@ -21,7 +27,6 @@ public class Gui extends Application {
     Label description;
     TextField titleToCheck;
     Button checkButton;
-    Text redirects;
     Text revisions;
 
     @Override
@@ -44,15 +49,17 @@ public class Gui extends Application {
         checkButton = new Button("Get Revisions");
         checkButton.setFont(Font.font("Consolas"));
         grid.add(checkButton, 1, 4);
-        redirects = new Text();
-        grid.add(redirects, 1, 6);
         revisions = new Text();
         grid.add(revisions,1,7);
 
         checkButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                handleButtonClick();
+                try {
+                    handleButtonClick();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
         Scene scene = new Scene(grid, 440, 240);
@@ -61,10 +68,17 @@ public class Gui extends Application {
         stage.show();
     }
 
-    private void handleButtonClick() {
+    private void handleButtonClick() throws IOException {
         String userEntry = titleToCheck.getText();
+        if (userEntry.isBlank()) {
+            revisions.setText("No Value was entered.");
+        }
+
+        URL wikiUrl = WikipediaRevisionReader.encodeURL(userEntry);
+        InputStream wikiStream = WikipediaRevisionReader.getWikiStream(wikiUrl);
+        JSONArray wiki = WikipediaRevisionParser.parseJSON(wikiStream);
+
+        revisions.setText(WikipediaRevisionFormatter.formatter(wiki));
     }
-
-
 
 }
