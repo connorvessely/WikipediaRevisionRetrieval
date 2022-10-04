@@ -5,17 +5,19 @@ import net.minidev.json.JSONArray;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.jayway.jsonpath.JsonPath.read;
+
 public class WikipediaRevisionParser {
 
     public static JSONArray parseJSON (InputStream inputStream) throws IOException {
-        return JsonPath.read(inputStream, "$..*");
+        return JsonPath.read(inputStream, "$.*");
     }
 
     public static WikipediaRevision[] parseRevisions(JSONArray wiki){
-        JSONArray userName = JsonPath.read(wiki, "$..user");
-        JSONArray timestamp = JsonPath.read(wiki, "$..timestamp");
-        WikipediaRevision[] revisionList = new WikipediaRevision[30];
-        for (int i = 0; i < revisionList.length; i++) {
+        JSONArray userName = read(wiki, "$..user");
+        JSONArray timestamp = read(wiki, "$..timestamp");
+        WikipediaRevision[] revisionList = new WikipediaRevision[userName.size()];
+        for (int i = 0; i < userName.size(); i++) {
             WikipediaRevision wikiRevision = new WikipediaRevision(userName.get(i).toString(), timestamp.get(i).toString());
             revisionList[i] = wikiRevision;
         }
@@ -23,12 +25,12 @@ public class WikipediaRevisionParser {
     }
 
     public static String parseRedirect(JSONArray wiki) {
-        JSONArray articleTitle = JsonPath.read(wiki, "$..redirects..to");
+        JSONArray articleTitle = read(wiki, "$..redirects..to");
         if (articleTitle.size()>0) {
             return "Redirected to " + articleTitle.get(0);
         }
         else {
-            articleTitle = JsonPath.read(wiki, "$..title");
+            articleTitle = read(wiki, "$..title");
             return "No redirects: " + articleTitle.get(0);
         }
     }

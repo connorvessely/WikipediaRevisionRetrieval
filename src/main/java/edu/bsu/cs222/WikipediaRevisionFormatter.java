@@ -8,8 +8,8 @@ public class WikipediaRevisionFormatter {
         WikipediaRevision[] revisionList = WikipediaRevisionParser.parseRevisions(wiki);
         String redirects = WikipediaRevisionParser.parseRedirect(wiki);
         StringBuilder formattedRevisions= new StringBuilder(String.format("%s\nRecent revisions: \n", redirects));
-        for (int i=0; i<revisionList.length; i++) {
-            formattedRevisions.append(revisionList[i].getTimestamp()).append(" ").append(revisionList[i].getAuthor()).append("\n");
+        for (WikipediaRevision wikipediaRevision : revisionList) {
+            formattedRevisions.append(wikipediaRevision.getTimestamp()).append(" ").append(wikipediaRevision.getAuthor()).append("\n");
         }
         return formattedRevisions.toString();
     }

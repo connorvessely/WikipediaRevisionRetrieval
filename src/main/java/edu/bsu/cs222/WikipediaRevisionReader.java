@@ -8,17 +8,10 @@ import java.net.URL;
 
 public class WikipediaRevisionReader {
 
-    public static InputStream getWikiStream(URL encodedUrl) {
-        URLConnection connection = null;
-        try {
-            connection = encodedUrl.openConnection();
-            connection.setRequestProperty("User-Agent", "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
-            return connection.getInputStream();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
+    public static InputStream getWikiStream(URL encodedUrl) throws IOException {
+        URLConnection connection = encodedUrl.openConnection();
+        connection.setRequestProperty("User-Agent", "WikipediaRevisionReader/0.1 sivelasco@bsu.edu");
+        return connection.getInputStream();
     }
 
 
